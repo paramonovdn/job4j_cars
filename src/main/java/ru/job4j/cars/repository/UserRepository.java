@@ -5,6 +5,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import ru.job4j.cars.model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +29,8 @@ public class UserRepository {
             user.setId(newId);
         } catch (Exception e) {
             session.getTransaction().rollback();
+        } finally {
+            session.close();
         }
         return user;
     }
@@ -49,6 +52,8 @@ public class UserRepository {
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
+        } finally {
+            session.close();
         }
     }
 
@@ -67,6 +72,8 @@ public class UserRepository {
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
+        } finally {
+            session.close();
         }
     }
 
@@ -76,10 +83,14 @@ public class UserRepository {
      */
     public List<User> findAllOrderById() {
         var session = sf.openSession();
-        session.beginTransaction();
-        List<User> result = session.createQuery("from User ORDER BY id", User.class).list();
-        session.getTransaction().commit();
-        session.close();
+        List<User> result = new ArrayList<>();
+        try {
+            result = session.createQuery("from User ORDER BY id", User.class).list();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            session.close();
+        }
         return result;
     }
 
@@ -89,10 +100,18 @@ public class UserRepository {
      */
     public Optional<User> findById(int userId) {
         var session = sf.openSession();
-        Query<User> query = session.createQuery(
-                "from User as user where user.id = :userId", User.class);
-        query.setParameter("userId", userId);
-        return Optional.ofNullable(query.uniqueResult());
+        Optional<User> result = Optional.empty();
+        try {
+            Query<User> query = session.createQuery(
+                    "from User as user where user.id = :userId", User.class);
+            query.setParameter("userId", userId);
+            result = query.uniqueResultOptional();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            session.close();
+        }
+        return result;
     }
 
     /**
@@ -102,12 +121,16 @@ public class UserRepository {
      */
     public List<User> findByLikeLogin(String key) {
         var session = sf.openSession();
-        session.beginTransaction();
-        List<User> result = session.createQuery("from User WHERE login LIKE :searchKey", User.class)
-                .setParameter("searchKey", "%" + key + "%")
-                .list();
-        session.getTransaction().commit();
-        session.close();
+        List<User> result = new ArrayList<>();
+        try {
+             result = session.createQuery("from User WHERE login LIKE :searchKey", User.class)
+                    .setParameter("searchKey", "%" + key + "%")
+                    .list();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            session.close();
+        }
         return result;
     }
 
@@ -118,9 +141,17 @@ public class UserRepository {
      */
     public Optional<User> findByLogin(String login) {
         var session = sf.openSession();
-        Query<User> query = session.createQuery(
-                "from User as user where user.login = :userLogin", User.class);
-        query.setParameter("userLogin", login);
-        return Optional.ofNullable(query.uniqueResult());
+        Optional<User> result = Optional.empty();
+        try {
+            Query<User> query = session.createQuery(
+                    "from User as user where user.login = :userLogin", User.class);
+            query.setParameter("userLogin", login);
+            result = query.uniqueResultOptional();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            session.close();
+        }
+        return result;
     }
 }

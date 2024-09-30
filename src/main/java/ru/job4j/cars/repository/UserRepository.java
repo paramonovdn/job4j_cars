@@ -3,6 +3,8 @@ package ru.job4j.cars.repository;
 import lombok.AllArgsConstructor;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.job4j.cars.model.User;
 
 import java.util.ArrayList;
@@ -12,6 +14,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserRepository {
     private final SessionFactory sf;
+
+    private static final Logger LOG = LoggerFactory.getLogger(UserRepository.class.getName());
 
     /**
      * Сохранить в базе.
@@ -23,12 +27,13 @@ public class UserRepository {
         try {
             session.beginTransaction();
             session.save(user);
-            session.getTransaction().commit();
             var newId = session.createQuery("from User as user where user.login = :userLogin", User.class)
                     .setParameter("userLogin", user.getLogin()).uniqueResult().getId();
+            session.getTransaction().commit();
             user.setId(newId);
         } catch (Exception e) {
             session.getTransaction().rollback();
+            LOG.error(e.getMessage(), e);
         } finally {
             session.close();
         }
@@ -52,6 +57,7 @@ public class UserRepository {
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
+            LOG.error(e.getMessage(), e);
         } finally {
             session.close();
         }
@@ -72,6 +78,7 @@ public class UserRepository {
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
+            LOG.error(e.getMessage(), e);
         } finally {
             session.close();
         }
@@ -85,9 +92,12 @@ public class UserRepository {
         var session = sf.openSession();
         List<User> result = new ArrayList<>();
         try {
+            session.beginTransaction();
             result = session.createQuery("from User ORDER BY id", User.class).list();
+            session.getTransaction().commit();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            session.getTransaction().rollback();
+            LOG.error(e.getMessage(), e);
         } finally {
             session.close();
         }
@@ -102,12 +112,15 @@ public class UserRepository {
         var session = sf.openSession();
         Optional<User> result = Optional.empty();
         try {
+            session.beginTransaction();
             Query<User> query = session.createQuery(
                     "from User as user where user.id = :userId", User.class);
             query.setParameter("userId", userId);
             result = query.uniqueResultOptional();
+            session.getTransaction().commit();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            session.getTransaction().rollback();
+            LOG.error(e.getMessage(), e);
         } finally {
             session.close();
         }
@@ -123,11 +136,14 @@ public class UserRepository {
         var session = sf.openSession();
         List<User> result = new ArrayList<>();
         try {
+            session.beginTransaction();
              result = session.createQuery("from User WHERE login LIKE :searchKey", User.class)
                     .setParameter("searchKey", "%" + key + "%")
                     .list();
+            session.getTransaction().commit();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            session.getTransaction().rollback();
+            LOG.error(e.getMessage(), e);
         } finally {
             session.close();
         }
@@ -143,12 +159,15 @@ public class UserRepository {
         var session = sf.openSession();
         Optional<User> result = Optional.empty();
         try {
+            session.beginTransaction();
             Query<User> query = session.createQuery(
                     "from User as user where user.login = :userLogin", User.class);
             query.setParameter("userLogin", login);
             result = query.uniqueResultOptional();
+            session.getTransaction().commit();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            session.getTransaction().rollback();
+            LOG.error(e.getMessage(), e);
         } finally {
             session.close();
         }

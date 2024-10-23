@@ -1,15 +1,19 @@
 package ru.job4j.cars.model;
 
+
 import lombok.*;
 
 import javax.persistence.*;
+import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "auto_user")
+@Table(name = "price_history")
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class User {
+public class PriceHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,9 +24,14 @@ public class User {
 
     @Getter
     @Setter
-    private String login;
+    private BigInteger before;
 
     @Getter
     @Setter
-    private String password;
+    private BigInteger after;
+
+    @Getter
+    @Setter
+    private Timestamp created = Timestamp.valueOf(LocalDateTime.now());
+
 }

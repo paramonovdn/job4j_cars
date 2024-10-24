@@ -3,6 +3,8 @@ package ru.job4j.cars.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "auto_user")
@@ -25,4 +27,12 @@ public class User {
     @Getter
     @Setter
     private String password;
+
+    @ManyToMany
+    @JoinTable(
+            name = "participates",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "post_id") }
+    )
+    private List<User> participates = new ArrayList<>();
 }

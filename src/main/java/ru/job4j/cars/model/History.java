@@ -4,22 +4,17 @@ package ru.job4j.cars.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Map;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Entity
-@Table(name = "participates")
+@Table(name = "history")
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
-public class Participate {
-
-    public static final Map<String, String> COLUMN_MAPPING = Map.of(
-            "id", "id",
-            "user_id", "userId",
-            "post_id", "postId"
-    );
-
+public class History {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
@@ -29,11 +24,11 @@ public class Participate {
 
     @Getter
     @Setter
-    private int userId;
+    private Timestamp startAt = Timestamp.valueOf(LocalDateTime.now(ZoneId.of("UTC")));
 
     @Getter
     @Setter
-    private int postId;
+    private Timestamp endAt = Timestamp.valueOf(LocalDateTime.now(ZoneId.of("UTC")));
 
 
 }

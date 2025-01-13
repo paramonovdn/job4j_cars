@@ -1,0 +1,1 @@
+ALTER TABLE history_owner ADD COLUMN history_id int not null references history(id);

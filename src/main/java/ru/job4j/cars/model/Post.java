@@ -21,7 +21,8 @@ public class Post {
             "id", "id",
             "description", "description",
             "created", "created",
-            "auto_user_id", "autoUserId"
+            "auto_user_id", "autoUserId",
+            "car_id", "carId"
     );
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +42,10 @@ public class Post {
     @Getter
     @Setter
     private int autoUserId;
+
+    @Getter
+    @Setter
+    private int carId;
 
 
     @Getter

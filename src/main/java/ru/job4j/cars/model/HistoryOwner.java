@@ -11,8 +11,6 @@ import java.util.Map;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class HistoryOwner {
-
-
     public static final Map<String, String> COLUMN_MAPPING = Map.of(
             "id", "id",
             "car_id", "carId",
@@ -31,7 +29,6 @@ public class HistoryOwner {
     @Getter
     @Setter
     private int ownerId;
-
     @ManyToOne
     @JoinColumn(name = "history_id", foreignKey = @ForeignKey(name = "HISTORY_ID_FK"))
     @Getter

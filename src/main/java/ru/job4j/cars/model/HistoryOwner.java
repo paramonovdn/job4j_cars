@@ -14,7 +14,7 @@ public class HistoryOwner {
     public static final Map<String, String> COLUMN_MAPPING = Map.of(
             "id", "id",
             "car_id", "carId",
-            "owner_id", "ownerId",
+            "owner_id", "owner",
             "history_id", "history"
     );
     @Id
@@ -28,10 +28,12 @@ public class HistoryOwner {
     private int carId;
     @Getter
     @Setter
-    private int ownerId;
     @ManyToOne
-    @JoinColumn(name = "history_id", foreignKey = @ForeignKey(name = "HISTORY_ID_FK"))
+    @JoinColumn(name = "owner_id")
+    private Owner owner;
     @Getter
     @Setter
+    @ManyToOne
+    @JoinColumn(name = "history_id")
     private History history;
 }

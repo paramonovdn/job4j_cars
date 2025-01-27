@@ -4,7 +4,9 @@ package ru.job4j.cars.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @Entity
 @Table(name = "owners")
@@ -34,4 +36,7 @@ public class Owner {
     @Getter
     @Setter
     private User user;
+
+    @OneToMany(mappedBy = "owners", cascade = CascadeType.ALL)
+    private Set<HistoryOwner> historyOwners = new HashSet<>();
 }

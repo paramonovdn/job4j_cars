@@ -7,6 +7,8 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "history")
@@ -30,5 +32,7 @@ public class History {
     @Setter
     private Timestamp endAt = Timestamp.valueOf(LocalDateTime.now(ZoneId.of("UTC")));
 
+    @OneToMany(mappedBy = "history", cascade = CascadeType.ALL)
+    private Set<HistoryOwner> historyOwners = new HashSet<>();
 
 }

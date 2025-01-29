@@ -22,7 +22,8 @@ public class Post {
             "description", "description",
             "created", "created",
             "auto_user_id", "autoUserId",
-            "car_id", "carId"
+            "car_id", "carId",
+            "file_id", "fileId"
     );
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,6 +47,11 @@ public class Post {
     @Getter
     @Setter
     private int carId;
+
+
+    @Getter
+    @Setter
+    private int fileId;
 
 
     @Getter

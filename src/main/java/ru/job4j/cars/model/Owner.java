@@ -37,6 +37,6 @@ public class Owner {
     @Setter
     private User user;
 
-    @OneToMany(mappedBy = "owners", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private Set<HistoryOwner> historyOwners = new HashSet<>();
 }

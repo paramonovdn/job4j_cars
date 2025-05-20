@@ -33,7 +33,7 @@ public class OwnerRepository implements OwnerStore {
     public boolean deleteById(int id) {
         try {
             crudRepository.run(
-                    "DELETE FROM Owners where id = :fId",
+                    "DELETE FROM Owner where id = :fId",
                     Map.of("fId", id)
             );
         } catch (Exception e) {
@@ -57,7 +57,7 @@ public class OwnerRepository implements OwnerStore {
     public Optional<Owner> findById(int id) {
         try {
             return crudRepository.optional(
-                    "SELECT DISTINCT o FROM Owners o LEFT JOIN FETCH o.user where o.id = :fId", Owner.class,
+                    "SELECT DISTINCT o FROM Owner o LEFT JOIN FETCH o.user where o.id = :fId", Owner.class,
                     Map.of("fId", id)
             );
         } catch (Exception e) {
@@ -69,7 +69,7 @@ public class OwnerRepository implements OwnerStore {
     @Override
     public List<Owner> findAll() {
         try {
-            return crudRepository.query("SELECT DISTINCT o FROM Owners c LEFT JOIN FETCH o.user ", Owner.class);
+            return crudRepository.query("SELECT DISTINCT o FROM Owner o LEFT JOIN FETCH o.user ", Owner.class);
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
         }

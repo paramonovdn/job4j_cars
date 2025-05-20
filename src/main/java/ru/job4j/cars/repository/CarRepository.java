@@ -2,6 +2,7 @@ package ru.job4j.cars.repository;
 
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -45,13 +46,22 @@ public class CarRepository implements CarStore {
     @Override
     public boolean update(Car car) {
         try {
-            crudRepository.run(session -> session.merge(car));
+            crudRepository.run(session -> {
+                Car mergedCar = (Car) session.merge(car);
+                // опционально можно делать flush, чтобы сразу отправить изменения в БД
+                session.flush();
+            });
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            LOG.error("Ошибка обновления машины: ", e);
+            return false;
         }
-        var updatedCar = findById(car.getId()).get();
-        return  (car.getName().equals(updatedCar.getName())
-                && car.getEngine().equals(updatedCar.getEngine()));
+        Optional<Car> updatedCarOpt = findById(car.getId());
+        if (updatedCarOpt.isEmpty()) {
+            return false;
+        }
+        Car updatedCar = updatedCarOpt.get();
+        return car.getName().equals(updatedCar.getName())
+                && car.getEngine().equals(updatedCar.getEngine());
     }
 
     @Override

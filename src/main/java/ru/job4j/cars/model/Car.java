@@ -37,6 +37,8 @@ public class Car {
     @Setter
     private Engine engine;
 
+    @Getter
+    @Setter
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "history_owner", joinColumns = {
             @JoinColumn(name = "car_id", nullable = false, updatable = false)},

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import ru.job4j.cars.model.Post;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +25,18 @@ public class PostRepository implements PostStore {
     @Override
     public List<Post> findLastDayPosts() {
         try {
-            var today = Timestamp.valueOf(LocalDateTime.now()).toString().substring(0, 10);
-            var posts = crudRepository.query("SELECT DISTINCT p FROM Post p LEFT JOIN FETCH p.messengers "
-                    + "WHERE p.created LIKE: today", Post.class,
-                    Map.of("today", today)
-                    );
+            LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
+            LocalDateTime startOfTomorrow = startOfToday.plusDays(1);
+
+            var posts = crudRepository.query(
+                    "SELECT DISTINCT p FROM Post p LEFT JOIN FETCH p.messengers "
+                            + "WHERE p.created >= :startOfToday AND p.created < :startOfTomorrow",
+                    Post.class,
+                    Map.of(
+                            "startOfToday", Timestamp.valueOf(startOfToday),
+                            "startOfTomorrow", Timestamp.valueOf(startOfTomorrow)
+                    )
+            );
             return posts;
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);

@@ -5,6 +5,8 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import ru.job4j.cars.model.Post;
+import javax.persistence.OneToMany;
 
 @Entity
 @Table(name = "auto_user")
@@ -35,5 +37,5 @@ public class User {
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "post_id") }
     )
-    private List<User> participates = new ArrayList<>();
+    private List<Post> participates = new ArrayList<>();
 }
